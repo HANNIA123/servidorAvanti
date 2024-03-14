@@ -7,22 +7,22 @@ const viajeRouter = express.Router();
 //Para el pasajero 10/12/2023
 viajeRouter.use(express.json());
 
-// Ruta para registrar un viaje- Conductor
-    viajeRouter.post('/registrarviaje', async (req, res) => {
-        try {
-            const nuevoViaje = req.body; // Asumiendo que la solicitud POST contiene los datos del nuevo usuario
+// Ruta para registrar un viaje- Conductor-- Agregado 13/03/2024
+viajeRouter.post('/registrarviaje', async (req, res) => {
+    try {
+        const nuevoViaje = req.body; // Asumiendo que la solicitud POST contiene los datos del nuevo usuario
 
-            // Agrega un viaje a la coleccion "viaje"
-            const viajesCollection = collection(db, 'viaje');
-            const docRef = await addDoc(viajesCollection, nuevoViaje);
+        // Agrega un viaje a la coleccion "viaje"
+        const viajesCollection = collection(db, 'viaje');
+        const docRef = await addDoc(viajesCollection, nuevoViaje);
 
-            res.json({ message: 'Viaje agregado correctamente', userId: docRef.id});
-            //res.json({ message: 'Usuario agregado correctamente', userId: docRef.id });
-        } catch (error) {
-            console.error('Error al agregar viaje a Firestore:', error);
-            res.status(500).json({success: false, message: 'Error al agregar viaje a Firestore'});
-        }
-    });
+        res.json({message: 'Viaje agregado correctamente', viajeId: docRef.id});
+        //res.json({ message: 'Usuario agregado correctamente', userId: docRef.id });
+    } catch (error) {
+        console.error('Error al agregar viaje a Firestore:', error);
+        res.status(500).json({success: false, message: 'Error al agregar viaje a Firestore'});
+    }
+});
 
 
 
