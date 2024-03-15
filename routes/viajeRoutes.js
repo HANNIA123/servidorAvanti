@@ -27,7 +27,8 @@ viajeRouter.post('/registrarviaje', async (req, res) => {
 
 
 //Ruta para consultar una coleccion teniendo el id
-viajeRouter.get('/:id', async (req, res) => {
+viajeRouter.get('obtenerviaje/:id', async (req, res) => {
+   
     // const usuarioId = "hplayasr1700@alumno.ipn.mx";
     const viajeId = req.params.id;
 
