@@ -26,9 +26,9 @@ paradaRouter.post('/registrarparada', async (req, res) => {
 });
 
 
-//Consulta paradas por id /api/paradas/:id
+//Consulta para obtener una lista de paradas de acuerdo al id de un viaje
 
-paradaRouter.get('/:id', async (req, res) => {
+paradaRouter.get('/obtenerlistaparadas/:id', async (req, res) => {
     const viajeId = req.params.id;
 
     try {
@@ -62,6 +62,7 @@ paradaRouter.get('/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
     }
 });
+
 
 //Ruta para consultar la parada, de acuerdo a su id
 paradaRouter.get('/obtenerparada/:id', async (req, res) => {
