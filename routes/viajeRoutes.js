@@ -53,6 +53,7 @@ viajeRouter.get('/obtenerviaje/:id', async (req, res) => {
                 viaje_paradas: viajeData.viaje_paradas || '',
                 viaje_iniciado: viajeData.viaje_iniciado || '',
                 viaje_num_pasajeros: viajeData.viaje_num_pasajeros || '',
+                viaje_num_pasajeros_con: viajeData.viaje_num_pasajeros_con || '',
 
 
             });
@@ -94,8 +95,8 @@ viajeRouter.get('/itinerarioviajes/:id', async (req, res) => {
                     viaje_paradas: data.viaje_paradas|| '',
                     viaje_iniciado: data.viaje_iniciado || '',
                     viaje_num_pasajeros: data.viaje_num_pasajeros || '',
-
-
+                    viaje_num_pasajeros_con: data.viaje_num_pasajeros_con || '',
+                    
 
                 };
             });
@@ -110,5 +111,7 @@ viajeRouter.get('/itinerarioviajes/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
     }
 });
+
+
 
 module.exports = viajeRouter;
