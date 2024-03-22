@@ -28,7 +28,6 @@ viajeRouter.post('/registrarviaje', async (req, res) => {
 
 //Ruta para consultar una coleccion teniendo el id
 viajeRouter.get('/obtenerviaje/:id', async (req, res) => {
-   
     // const usuarioId = "hplayasr1700@alumno.ipn.mx";
     const viajeId = req.params.id;
 
@@ -41,7 +40,7 @@ viajeRouter.get('/obtenerviaje/:id', async (req, res) => {
 
             // Enviar datos como respuesta en formato JSON
             res.json({
-                viaje_id:viajeData.viaje_id || '',
+                viaje_id: viajeData.viaje_id || '',
                 usu_id: viajeData.usu_id || '',
                 viaje_destino: viajeData.viaje_destino || '',
                 viaje_origen: viajeData.viaje_origen || '',
@@ -53,16 +52,19 @@ viajeRouter.get('/obtenerviaje/:id', async (req, res) => {
                 viaje_num_lugares: viajeData.viaje_num_lugares || '',
                 viaje_paradas: viajeData.viaje_paradas || '',
                 viaje_iniciado: viajeData.viaje_iniciado || '',
+                viaje_num_pasajeros: viajeData.viaje_num_pasajeros || '',
+
 
             });
         } else {
-            res.status(404).json({ error: 'El id del viaje no existe' });
+            res.status(404).json({error: 'El id del viaje no existe'});
         }
     } catch (error) {
         console.error('Error al obtener documento desde Firestore:', error);
-        res.status(500).json({ error: 'Error al obtener documento desde Firestore' });
+        res.status(500).json({error: 'Error al obtener documento desde Firestore'});
     }
 });
+
 
 
 // Obtener todos los viajes de un conductor con el id del conductor
@@ -91,6 +93,8 @@ viajeRouter.get('/itinerarioviajes/:id', async (req, res) => {
                     viaje_num_lugares: data.viaje_num_lugares || '',
                     viaje_paradas: data.viaje_paradas|| '',
                     viaje_iniciado: data.viaje_iniciado || '',
+                    viaje_num_pasajeros: data.viaje_num_pasajeros || '',
+
 
 
                 };
@@ -106,8 +110,5 @@ viajeRouter.get('/itinerarioviajes/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
     }
 });
-
-
-
 
 module.exports = viajeRouter;
