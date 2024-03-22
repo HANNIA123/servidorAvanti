@@ -65,4 +65,49 @@ viajeRouter.get('/obtenerviaje/:id', async (req, res) => {
 });
 
 
+// Obtener todos los viajes de un conductor con el id del conductor
+viajeRouter.get('/itinerarioviajes/:id', async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        // Assuming 'viajes' is your collection name
+        const viajesRef = collection(db, 'viaje');
+        const viajesQuery = query(viajesRef, where('usu_id', '==', userId));
+        const viajesSnapshot = await getDocs(viajesQuery);
+
+        if (viajesSnapshot.docs.length > 0) {
+            // Map the documents to an array of JSON objects
+            const viajesData = viajesSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    viaje_id: doc.id, // Agregar el I
+                    viaje_destino: data.viaje_destino || '',
+                    viaje_origen: data.viaje_origen || '',
+                    viaje_hora_llegada: data.viaje_hora_llegada || '',
+                    viaje_hora_partida: data.viaje_hora_partida || '',
+                    viaje_dia: data.viaje_dia || '',
+                    viaje_trayecto:data.viaje_trayecto || '',
+                    viaje_status: data.viaje_status || '',
+                    viaje_num_lugares: data.viaje_num_lugares || '',
+                    viaje_paradas: data.viaje_paradas|| '',
+                    viaje_iniciado: data.viaje_iniciado || '',
+
+
+                };
+            });
+
+            // Send the array of JSON objects as a response
+            res.json(viajesData);
+        } else {
+            res.status(404).json({ error: 'No se encontraron paradas para el viaje' });
+        }
+    } catch (error) {
+        console.error('Error al obtener documentos desde Firestore:', error);
+        res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+    }
+});
+
+
+
+
 module.exports = viajeRouter;
