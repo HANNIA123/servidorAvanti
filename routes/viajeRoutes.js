@@ -54,6 +54,9 @@ viajeRouter.get('/obtenerviaje/:id', async (req, res) => {
                 viaje_iniciado: viajeData.viaje_iniciado || '',
                 viaje_num_pasajeros: viajeData.viaje_num_pasajeros || '',
                 viaje_num_pasajeros_con: viajeData.viaje_num_pasajeros_con || '',
+                viaje_tarifa: viajeData.viaje_tarifa || ''
+
+
 
 
             });
