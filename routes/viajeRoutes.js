@@ -1,7 +1,9 @@
 // routes/viajeRoutes.js
 const express = require('express');
-const { doc, getDoc, collection, addDoc, getDocs, query, where } = require('firebase/firestore');
+const {doc, getDoc, collection, addDoc,
+    getDocs,updateDoc, query, where} = require('firebase/firestore');
 const db = require('../firebase');
+
 
 const viajeRouter = express.Router();
 //Para el pasajero 10/12/2023
@@ -112,6 +114,33 @@ viajeRouter.get('/itinerarioviajes/:id', async (req, res) => {
     } catch (error) {
         console.error('Error al obtener documentos desde Firestore:', error);
         res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+    }
+});
+viajeRouter.put('/actualizarstatus/:id/:status', async (req, res) => {
+    const viajeId = req.params.id;
+    const nuevoStatus = req.params.status;
+    console.log("id viaje ", viajeId)
+
+    try {
+        const viajeRef = doc(db, 'viaje', viajeId);
+        // Actualizar el campo 'viaje_status' del documento del viaje
+
+        await updateDoc(viajeRef, {
+            viaje_status: nuevoStatus
+        });
+
+        // Obtener el campo 'viaje_paradas' de la base de datos
+        const viajeDoc = await getDoc(viajeRef);
+        const viajeData = viajeDoc.data();
+        const viajeParadas = viajeData.viaje_paradas;
+
+        res.status(200).json({
+            message: 'Campo viaje_status actualizado correctamente',
+            viaje_paradas: viajeParadas
+        });
+    } catch (error) {
+        console.error('Error al actualizar campo viaje_status:', error);
+        res.status(500).json({ error: 'Error al actualizar campo viaje_status' });
     }
 });
 
