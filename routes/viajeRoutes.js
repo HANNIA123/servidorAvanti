@@ -144,6 +144,23 @@ viajeRouter.put('/actualizarstatus/:id/:status', async (req, res) => {
     }
 });
 
+// Ruta para actualizar un viaje específico
+viajeRouter.put('/editarviaje/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const datosActualizados = req.body; // Asumiendo que la solicitud PUT contiene los datos actualizados del horario
+
+        // Actualiza el viaje en la colección "viaje"
+        const horariosCollection = collection(db, 'viaje');
+        await updateDoc(doc(horariosCollection, id), datosActualizados);
+
+        res.json({ message: 'Viaje actualizado correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar viaje en Firestore:', error);
+        res.status(500).json({ success: false, message: 'Error al actualizar horario en Firestore'})
+    }
+});
+
 
 
 module.exports = viajeRouter;
