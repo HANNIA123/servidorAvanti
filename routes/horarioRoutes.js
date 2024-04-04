@@ -24,6 +24,7 @@ horarioRouter.post('/registrarhorario', async (req, res) => {
     }
 });
 
+
 //Ruta para obtener el itinerario del pasajero
 horarioRouter.get('/itinerarioviajespasajero/:id', async (req, res) => {
     const userId = req.params.id;
@@ -59,6 +60,40 @@ horarioRouter.get('/itinerarioviajespasajero/:id', async (req, res) => {
     } catch (error) {
         console.error('Error al obtener documentos desde Firestore:', error);
         res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+    }
+});
+
+
+horarioRouter.get('/obtenerhorario/:id', async (req, res) => {
+    // const usuarioId = "hplayasr1700@alumno.ipn.mx";
+    const horarioId = req.params.id;
+
+    try {
+        const viajeRef = doc(db, 'horario', horarioId);
+        const viajeDoc = await getDoc(viajeRef);
+
+        if (viajeDoc.exists()) {
+            const horarioData = viajeDoc.data();
+
+            // Enviar datos como respuesta en formato JSON
+            res.json({
+                horario_trayecto: horarioData.horario_trayecto || '',
+                horario_dia: horarioData.horario_dia || '',
+                horario_hora: horarioData.horario_hora || '',
+                horario_destino: horarioData.horario_destino || '',
+                horario_origen: horarioData.horario_origen || '',
+                usu_id: horarioData.usu_id || '',
+                horario_solicitud: horarioData.horario_solicitud || '',
+                horario_status: horarioData.horario_status || ''
+
+            });
+            console.log("finalemente")
+        } else {
+            res.status(404).json({ error: 'El id del viaje no existe' });
+        }
+    } catch (error) {
+        console.error('Error al obtener documento desde Firestore:', error);
+        res.status(500).json({ error: 'Error al obtener documento desde Firestore' });
     }
 });
 
