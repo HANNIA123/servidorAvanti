@@ -97,6 +97,55 @@ horarioRouter.get('/obtenerhorario/:id', async (req, res) => {
     }
 });
 
+//Pedneintes para Git 03/04/24
+horarioRouter.get('/busquedaviajes/:id', async (req, res) => {
+    const horarioId = req.params.id;
+    try {
+        const horarioRef = doc(db, 'horario', horarioId);
+        const horarioDoc = await getDoc(horarioRef);
+
+        //primero obtiene el horario registrado por el pasajero de acuerdo al id
+        if (!horarioDoc.exists()) {
+            return res.status(404).json({ error: 'El id del viaje no existe' });
+        }
+
+        const horarioData = horarioDoc.data();
+        const datosHorarioUsuario = {
+            horario_trayecto: horarioData.horario_trayecto || '',
+            horario_dia: horarioData.horario_dia || '',
+            horario_hora: horarioData.horario_hora || '',
+            horario_destino: horarioData.horario_destino || '',
+            horario_origen: horarioData.horario_origen || '',
+            usu_id: horarioData.usu_id || '',
+            horario_solicitud: horarioData.horario_solicitud || '',
+        };
+
+        const viajesRef = collection(db, 'viaje');
+        const viajesQuery = query(
+            viajesRef,
+            where('viaje_trayecto', '==', datosHorarioUsuario.horario_trayecto),
+            where('viaje_dia', '==', datosHorarioUsuario.horario_dia)
+        );
+
+        const viajesSnapshot = await getDocs(viajesQuery);
+
+        if (viajesSnapshot.docs.length > 0) {
+            const viajesData = viajesSnapshot.docs.map(doc => ({
+                viaje_id: doc.id,
+                ...doc.data(),
+            }));
+
+            console.log("Prueba del viaje: ", viajesData);
+            res.json(viajesData);
+        } else {
+            console.log("no se encontro viaje")
+            res.status(404).json({ error: 'No se encontro viajes para este horario' });
+        }
+    } catch (error) {
+        console.error('Error al obtener documentos desde Firestore:', error);
+        res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+    }
+});
 
 
 
