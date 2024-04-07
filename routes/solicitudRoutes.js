@@ -8,7 +8,7 @@ const solicitudRouter = express.Router();
 // Middleware para analizar el cuerpo de la solicitud como JSON
 solicitudRouter.use(express.json());
 //Obtener datos de la solcitud teniendo su id 04/01/202 no server
-solicitudRouter.get('/api/obtenersolicitud/:id', async (req, res) => {
+solicitudRouter.get('/obtenersolicitud/:id', async (req, res) => {
 
     const solicitudId = req.params.id;
 
