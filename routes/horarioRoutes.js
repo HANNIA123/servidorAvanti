@@ -151,6 +151,28 @@ console.log(datosHorarioUsuario.horario_trayecto, "  ",datosHorarioUsuario.horar
 
 
 
+horarioRouter.put('/modificarsolicitudhorario/:id/:status', async (req, res) => {
+    const horarioId = req.params.id;
+    const nuevoStatus = req.params.status;
+
+    try {
+        const paradaRef = doc(db, 'horario', horarioId);
+        const paradaDoc = await getDoc(paradaRef);
+
+        if (paradaDoc.exists()) {
+            // Modificar solo el campo status de la parada
+            await updateDoc(paradaRef, { horario_solicitud: nuevoStatus });
+            console.log("Solicitud en horario modificada ")
+            res.json({ message: 'Estado de la solicitud modificado correctamente' });
+        } else {
+            res.status(404).json({ error: 'La parada no existe' });
+        }
+    } catch (error) {
+        console.error('Error al modificar el estado de la solicitud en Firestore:', error);
+        res.status(500).json({ error: 'Error al modificar el estado de la solicitud en Firestore' });
+    }
+});
+
 
 
 
