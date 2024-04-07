@@ -45,14 +45,48 @@ solicitudRouter.get('/obtenersolicitud/:id', async (req, res) => {
 });
 
 
+//Ruta para obtener la solicitud de acuerdo al id del horario
+solicitudRouter.get('/obtenersolicitudhorario/:id', async (req, res) => {
+    const horarioId = req.params.id;
+    console.log("horarioId", horarioId)
+    try {
+        // Consultar la solicitud con el horario_id proporcionado
+        const solicitudQuery = query(collection(db, 'solicitud'), where('horario_id', '==', horarioId));
+        const solicitudSnapshot = await getDocs(solicitudQuery);
 
+        // Verificar si se encontró alguna solicitud
+        if (!solicitudSnapshot.empty) {
 
-// Ruta para registrar una solitud- correcto
+            const solicitudData = solicitudSnapshot.docs[0].data();
+        
+            // Enviar el horario_id como respuesta en formato JSON
+            res.json({ 
+                conductor_id: solicitudData.conductor_id || '',
+                horario_id: solicitudData.horario_id || '',
+                horario_trayecto: solicitudData.horario_trayecto || '',
+                parada_id: solicitudData.parada_id || '',
+                pasajero_id: solicitudData.pasajero_id || '',
+                solicitud_date: solicitudData.solicitud_date || '',
+                solicitud_status: solicitudData.solicitud_status || '',
+                viaje_id: solicitudData.viaje_id || '',
+                solicitud_activa_con: solicitudData.solicitud_activa_con || '',
+                solicitud_activa_pas: solicitudData.solicitud_activa_pas || '', 
+        });
+        } else {
+            res.status(404).json({ error: 'La solicitud no existe' });
+        }
+    } catch (error) {
+        console.error('Error al obtener solicitud desde Firestore:', error);
+        res.status(500).json({ error: 'Error al obtener solicitud desde Firestore' });
+    }
+});
+
+// Ruta para registrar una solicitud
 solicitudRouter.post('/registrarsolicitud', async (req, res) => {
     try {
         const nuevoViaje = req.body; // Asumiendo que la solicitud POST contiene los datos del nuevo usuario
 
-        // Agrega una solciitud a la coleccion "solcitud"
+        // Agrega un viaje a la coleccion "viaje"
         const viajesCollection = collection(db, 'solicitud');
         const docRef = await addDoc(viajesCollection, nuevoViaje);
 
@@ -63,7 +97,6 @@ solicitudRouter.post('/registrarsolicitud', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error al agregar solicitud a Firestore' });
     }
 });
-
 
 
 module.exports = solicitudRouter;
