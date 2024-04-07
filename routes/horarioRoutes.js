@@ -120,6 +120,8 @@ horarioRouter.get('/busquedaviajes/:id', async (req, res) => {
             horario_solicitud: horarioData.horario_solicitud || '',
         };
 
+        console.log("Horario: ", datosHorarioUsuario)
+console.log(datosHorarioUsuario.horario_trayecto, "  ",datosHorarioUsuario.horario_dia )
         const viajesRef = collection(db, 'viaje');
         const viajesQuery = query(
             viajesRef,
@@ -146,44 +148,6 @@ horarioRouter.get('/busquedaviajes/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
     }
 });
-
-
-
-horarioRouter.get('/busquedaparadas/:id', async (req, res) => {
-    const listaViajeIds = req.params.id.split(',');
-
-    try {
-        // Assuming 'paradas' is your collection name
-        const paradasRef = collection(db, 'parada');
-        const paradasQuery = query(paradasRef, where('viaje_id', 'in', listaViajeIds));
-        const paradasSnapshot = await getDocs(paradasQuery);
-
-        if (paradasSnapshot.docs.length > 0) {
-            // Map the documents to an array of JSON objects
-            const paradasData = paradasSnapshot.docs.map(doc => {
-                const data = doc.data();
-                return {
-                    par_id: doc.id, // Agregar el I
-                    viaje_id: data.viaje_id || '',
-                    par_hora: data.par_hora || '',
-                    par_nombre: data.par_nombre || '',
-                    par_ubicacion: data.par_ubicacion || '',
-                    user_id: data.user_id || '',
-                };
-            });
-
-            // Send the array of JSON objects as a response
-            res.json(paradasData);
-            console.log("Prueba de parasas: ", paradasData)
-        } else {
-            res.status(404).json({ error: 'No se encontraron paradas para los viajes proporcionados' });
-        }
-    } catch (error) {
-        console.error('Error al obtener documentos desde Firestore:', error);
-        res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
-    }
-});
-
 
 
 
