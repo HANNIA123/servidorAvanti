@@ -1,6 +1,6 @@
 // routes/vehiculoRoutes.js
 const express = require('express');
-const { doc, getDoc, collection, query, where, getDocs} = require('firebase/firestore');
+const { doc, getDoc, addDoc, collection, query, where, getDocs} = require('firebase/firestore');
 const db = require('../firebase');
 
 const solicitudRouter = express.Router();
@@ -89,7 +89,7 @@ solicitudRouter.post('/registrarsolicitud', async (req, res) => {
         // Agrega un viaje a la coleccion "viaje"
         const viajesCollection = collection(db, 'solicitud');
         const docRef = await addDoc(viajesCollection, nuevoViaje);
-
+console.log("Enviadaa")
         res.json({ message: 'Solicitud agregado correctamente', userId: docRef.id});
         //res.json({ message: 'Usuario agregado correctamente', userId: docRef.id });
     } catch (error) {
