@@ -16,7 +16,7 @@ horarioRouter.post('/registrarhorario', async (req, res) => {
         const viajesCollection = collection(db, 'horario');
         const docRef = await addDoc(viajesCollection, nuevoViaje);
 
-        res.json({ message: 'viaje agregado correctamente', userId: docRef.id});
+        res.json({ message: 'viaje agregado correctamente', horarioId: docRef.id});
         //res.json({ message: 'Usuario agregado correctamente', userId: docRef.id });
     } catch (error) {
         console.error('Error al agregar viaje a Firestore:', error);
@@ -165,7 +165,7 @@ horarioRouter.put('/modificarsolicitudhorario/:id/:status', async (req, res) => 
             console.log("Solicitud en horario modificada ")
             res.json({ message: 'Estado de la solicitud modificado correctamente' });
         } else {
-            res.status(404).json({ error: 'La parada no existe' });
+            res.status(404).json({ error: 'El horario no existe' });
         }
     } catch (error) {
         console.error('Error al modificar el estado de la solicitud en Firestore:', error);
