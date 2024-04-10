@@ -173,6 +173,33 @@ horarioRouter.put('/modificarsolicitudhorario/:id/:status', async (req, res) => 
     }
 });
 
+horarioRouter.put('/actualizarstatus/:id/:status', async (req, res) => {
+    const horarioId = req.params.id;
+    const nuevoStatus = req.params.status;
+    console.log("id horario ", horarioId)
+
+    try {
+        const horarioRef = doc(db, 'horario', horarioId);
+        // Actualizar el campo 'viaje_status' del documento del viaje
+
+        await updateDoc(horarioRef, {
+            horario_status: nuevoStatus
+        });
+
+        // Obtener el campo 'viaje_paradas' de la base de datos
+        const horarioDoc = await getDoc(horarioRef);
+        const horarioData = horarioDoc.data();
+        //const viajeParadas = horarioData.viaje_paradas;
+
+        res.status(200).json({
+            message: 'Campo horario_status actualizado correctamente',
+            //viaje_paradas: viajeParadas
+        });
+    } catch (error) {
+        console.error('Error al actualizar campo horario_status:', error);
+        res.status(500).json({ error: 'Error al actualizar campo horario_status' });
+    }
+});
 
 
 
