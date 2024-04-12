@@ -1,8 +1,7 @@
 // routes/vehiculoRoutes.js
 const express = require('express');
-const { doc, getDoc, addDoc, collection, query, where, getDocs} = require('firebase/firestore');
+const { doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs} = require('firebase/firestore');
 const db = require('../firebase');
-const {updateDoc} = require("@firebase/firestore");
 
 const solicitudRouter = express.Router();
 
@@ -139,7 +138,7 @@ solicitudRouter.get('/obtenersolicitudesconductor/:id', async (req, res) => {
     }
 });
 
-solicitudRouter.put('modificarstatussolicitud/:id/:status', async (req, res) => {
+solicitudRouter.put('/modificarstatussolicitud/:id/:status', async (req, res) => {
     const paradaId = req.params.id;
     const nuevoStatus = req.params.status;
 
@@ -150,9 +149,10 @@ solicitudRouter.put('modificarstatussolicitud/:id/:status', async (req, res) => 
         if (paradaDoc.exists()) {
             // Modificar solo el campo status de la parada
             await updateDoc(paradaRef, { solicitud_status: nuevoStatus });
-            console.log("Solicitud modificada ")
+            console.log("Solicitud en status ")
             res.json({ message: 'Estado de la solicitud modificado correctamente' });
         } else {
+            console.log("Solicitud en no modif ")
             res.status(404).json({ error: 'La parada no existe' });
         }
     } catch (error) {
