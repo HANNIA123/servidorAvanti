@@ -30,15 +30,16 @@ admin.initializeApp({
 
 notificacionRouter.use(express.json());
 
+//Ya implementado, no borrar
 notificacionRouter.post('/registrarnotificacion', async (req, res) => {
     try {
-        const imprevisto = req.body; // Asumiendo que la solicitud POST contiene los datos del nuevo usuario
+        const notificacion = req.body; // Asumiendo que la solicitud POST contiene los datos del nuevo usuario
 
-        // Agrega un viaje a la coleccion "viaje"
+
         const imprevistoCollection = collection(db, 'notificacion');
-        const docRef = await addDoc(imprevistoCollection, imprevisto);
+        const docRef = await addDoc(imprevistoCollection, notificacion);
 
-        res.json({ message: 'Notificacion agregado correctamente', userId: docRef.id});
+        res.json({ message: 'Notificacion agregada correctamente', userId: docRef.id});
 
     } catch (error) {
         console.error('Error al agregar el notificacion a Firestore:', error);
