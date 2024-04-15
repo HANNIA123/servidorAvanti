@@ -98,56 +98,97 @@ horarioRouter.get('/obtenerhorario/:id', async (req, res) => {
 });
 
 //Pedneintes para Git 03/04/24
+
+
+
+
+
+//Agregado 10/12/2023 -- obtener los viajes para el pasajero --horario!
 horarioRouter.get('/busquedaviajes/:id', async (req, res) => {
     const horarioId = req.params.id;
+    console.log(horarioId)
     try {
         const horarioRef = doc(db, 'horario', horarioId);
         const horarioDoc = await getDoc(horarioRef);
+        if (horarioDoc.exists()) {
+            const horarioData = horarioDoc.data();
+            // Guardar los datos en una variable
+            const DatosHorario = {
+                horario_trayecto: horarioData.horario_trayecto || '',
+                horario_dia: horarioData.horario_dia || '',
+                horario_hora: horarioData.horario_hora || '',
+                horario_destino: horarioData.horario_destino || '',
+                horario_origen: horarioData.horario_origen || '',
+                usu_id: horarioData.usu_id || '',
+                horario_solicitud:  horarioData.horario_solicitud || '',
+            };
+            console.log(DatosHorario)
+            try {
+                // Assuming 'viajes' is your collection name
+                let horarioComparar
+                if (DatosHorario.horario_trayecto==='0'){
+                    horarioComparar='viaje_hora_partida'
+                }
+                else{
+                    horarioComparar='viaje_hora_llegada'
 
-        //primero obtiene el horario registrado por el pasajero de acuerdo al id
-        if (!horarioDoc.exists()) {
-            return res.status(404).json({ error: 'El id del viaje no existe' });
-        }
+                }
+                const viajesRef = collection(db, 'viaje');
+                const viajesQuery = query(viajesRef, where('viaje_trayecto', '==',
+                        DatosHorario.horario_trayecto),
+                    //where(horarioComparar, '==', DatosHorario.horario_hora),
+                    where('viaje_dia', '==', DatosHorario.horario_dia),
+                );
+                const viajesSnapshot = await getDocs(viajesQuery);
 
-        const horarioData = horarioDoc.data();
-        const datosHorarioUsuario = {
-            horario_trayecto: horarioData.horario_trayecto || '',
-            horario_dia: horarioData.horario_dia || '',
-            horario_hora: horarioData.horario_hora || '',
-            horario_destino: horarioData.horario_destino || '',
-            horario_origen: horarioData.horario_origen || '',
-            usu_id: horarioData.usu_id || '',
-            horario_solicitud: horarioData.horario_solicitud || '',
-        };
+                if (viajesSnapshot.docs.length > 0) {
+                    // Map the documents to an array of JSON objects
+                    const viajesData = viajesSnapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return {
+                            viaje_id: doc.id, // Agregar el Id
+                            viaje_destino: data.viaje_destino || '',
+                            viaje_origen: data.viaje_origen || '',
+                            viaje_hora_llegada: data.viaje_hora_llegada || '',
+                            viaje_hora_partida: data.viaje_hora_partida || '',
+                            viaje_dia: data.viaje_dia || '',
+                            viaje_trayecto: data.viaje_trayecto || '',
+                            viaje_num_lugares: data.viaje_num_lugares || '',
+                            viaje_status: data.viaje_status || '',
+                            viaje_paradas: data.viaje_paradas || '',
+                            viaje_iniciado: data.viaje_iniciado || '',
+                            usu_id: data.usu_id || '',
 
-        console.log("Horario: ", datosHorarioUsuario)
-console.log(datosHorarioUsuario.horario_trayecto, "  ",datosHorarioUsuario.horario_dia )
-        const viajesRef = collection(db, 'viaje');
-        const viajesQuery = query(
-            viajesRef,
-            where('viaje_trayecto', '==', datosHorarioUsuario.horario_trayecto),
-            where('viaje_dia', '==', datosHorarioUsuario.horario_dia)
-        );
+                        };
+                    });
 
-        const viajesSnapshot = await getDocs(viajesQuery);
+                    // Send the array of JSON objects as a response
+                    console.log("Prueba del viaje: ", viajesData)
+                    res.json(viajesData);
+                } else {
 
-        if (viajesSnapshot.docs.length > 0) {
-            const viajesData = viajesSnapshot.docs.map(doc => ({
-                viaje_id: doc.id,
-                ...doc.data(),
-            }));
+                    res.status(404).json({ error: 'No se encontraron paradas para el viaje' });
+                }
+            } catch (error) {
+                console.error('Error al obtener documentos desde Firestore:', error);
+                res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+            }
 
-            console.log("Prueba del viaje: ", viajesData);
-            res.json(viajesData);
+
         } else {
-            console.log("no se encontro viaje")
-            res.status(404).json({ error: 'No se encontro viajes para este horario' });
+            res.status(404).json({ error: 'El id del viaje no existe' });
         }
     } catch (error) {
-        console.error('Error al obtener documentos desde Firestore:', error);
-        res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+        console.error('Error al obtener documento desde Firestore:', error);
+        res.status(500).json({ error: 'Error al obtener documento desde Firestore' });
     }
+
+
+
+
+
 });
+
 
 
 

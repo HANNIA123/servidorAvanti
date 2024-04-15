@@ -137,8 +137,9 @@ paradaRouter.get('/busquedaparadas/:id', async (req, res) => {
 
             // Send the array of JSON objects as a response
             res.json(paradasData);
-            console.log("Prueba de parasas: ", paradasData)
+            console.log("se encontraón paradas")
         } else {
+            console.log("nooo se encontraón paradas")
             res.status(404).json({ error: 'No se encontraron paradas para los viajes proporcionados' });
         }
     } catch (error) {
