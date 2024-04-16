@@ -162,5 +162,51 @@ solicitudRouter.put('/modificarstatussolicitud/:id/:status', async (req, res) =>
 });
 
 
+//Obtener los datos de TODAS las solcitud que coincidan con un viaje
+//31/12/2023
+solicitudRouter.get('/solicitudesbyviaje/:id/:status', async (req, res) => {
+    const viajeId = req.params.id;
+    const status = req.params.status;
+
+    try {
+        const viajesRef = collection(db, 'solicitud');
+        const viajesQuery = query(viajesRef,
+            where('viaje_id', '==', viajeId),  where('solicitud_status', '==', status)
+        );
+        const viajesSnapshot = await getDocs(viajesQuery);
+
+
+        if (viajesSnapshot.docs.length > 0) {
+            // Map the documents to an array of JSON objects
+            const viajesData = viajesSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    solicitud_id:     doc.id, // Agregar el Id
+                    conductor_id: data.conductor_id || '',
+                    horario_id: data.horario_id || '',
+                    horario_trayecto: data.horario_trayecto || '',
+                    parada_id: data.parada_id || '',
+                    pasajero_id:data.pasajero_id || '',
+                    solicitud_date:data.solicitud_date || '',
+                    solicitud_status:data.solicitud_status || '',
+                    viaje_id:data.viaje_id || '',
+                    solicitud_activa_con:data.solicitud_activa_con || '',
+                    solicitud_activa_pas:data.solicitud_activa_pas || '',
+
+                };
+            });
+console.log("solicitudes!! ")
+            res.json(viajesData);
+        } else {
+            res.status(404).json({ error: 'No se encontraron solicitudes para el viaje' });
+        }
+    } catch (error) {
+        console.error('Error al obtener documentos desde Firestore:', error);
+        res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+    }
+});
+
+
+
 
 module.exports = solicitudRouter;
