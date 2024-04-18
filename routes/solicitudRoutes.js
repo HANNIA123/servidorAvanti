@@ -1,6 +1,6 @@
 // routes/vehiculoRoutes.js
 const express = require('express');
-const { doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs} = require('firebase/firestore');
+const {doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs} = require('firebase/firestore');
 const db = require('../firebase');
 
 const solicitudRouter = express.Router();
@@ -26,21 +26,21 @@ solicitudRouter.get('/obtenersolicitud/:id', async (req, res) => {
                 horario_id: solicitudData.horario_id || '',
                 horario_trayecto: solicitudData.horario_trayecto || '',
                 parada_id: solicitudData.parada_id || '',
-                pasajero_id:solicitudData.pasajero_id || '',
-                solicitud_date:solicitudData.solicitud_date || '',
-                solicitud_status:solicitudData.solicitud_status || '',
-                viaje_id:solicitudData.viaje_id || '',
-                solicitud_activa_con:solicitudData.solicitud_activa_con || '',
-                solicitud_activa_pas:solicitudData.solicitud_activa_pas || '',
+                pasajero_id: solicitudData.pasajero_id || '',
+                solicitud_date: solicitudData.solicitud_date || '',
+                solicitud_status: solicitudData.solicitud_status || '',
+                viaje_id: solicitudData.viaje_id || '',
+                solicitud_activa_con: solicitudData.solicitud_activa_con || '',
+                solicitud_activa_pas: solicitudData.solicitud_activa_pas || '',
 
 
             });
         } else {
-            res.status(404).json({ error: 'La solcitud no existe' });
+            res.status(404).json({error: 'La solcitud no existe'});
         }
     } catch (error) {
         console.error('Error al obtener documento desde Firestore:', error);
-        res.status(500).json({ error: 'Error al obtener documento desde Firestore' });
+        res.status(500).json({error: 'Error al obtener documento desde Firestore'});
     }
 });
 
@@ -48,38 +48,41 @@ solicitudRouter.get('/obtenersolicitud/:id', async (req, res) => {
 //Ruta para obtener la solicitud de acuerdo al id del horario
 solicitudRouter.get('/obtenersolicitudhorario/:id', async (req, res) => {
     const horarioId = req.params.id;
-    console.log("horarioId", horarioId)
     try {
-        // Consultar la solicitud con el horario_id proporcionado
-        const solicitudQuery = query(collection(db, 'solicitud'), where('horario_id', '==', horarioId));
-        const solicitudSnapshot = await getDocs(solicitudQuery);
+        const SolicitudRef = collection(db, 'solicitud');
+        const SolicitudQuery = query(SolicitudRef,
+            where('horario_id', '==', horarioId)
+        );
+        const SolicitudDocument = await getDocs(SolicitudQuery);
+        if (SolicitudDocument.docs.length > 0) {
+            const solicitudData = SolicitudDocument.docs.map(doc => {
+                const data = doc.data();
 
-        // Verificar si se encontró alguna solicitud
-        if (!solicitudSnapshot.empty) {
-
-            const solicitudData = solicitudSnapshot.docs[0].data();
-        
-            // Enviar el horario_id como respuesta en formato JSON
-            res.json({ 
-                conductor_id: solicitudData.conductor_id || '',
-                horario_id: solicitudData.horario_id || '',
-                horario_trayecto: solicitudData.horario_trayecto || '',
-                parada_id: solicitudData.parada_id || '',
-                pasajero_id: solicitudData.pasajero_id || '',
-                solicitud_date: solicitudData.solicitud_date || '',
-                solicitud_status: solicitudData.solicitud_status || '',
-                viaje_id: solicitudData.viaje_id || '',
-                solicitud_activa_con: solicitudData.solicitud_activa_con || '',
-                solicitud_activa_pas: solicitudData.solicitud_activa_pas || '', 
-        });
+                return {
+                    solicitud_id: doc.id, // Agregar el Id
+                    conductor_id: data.conductor_id || '',
+                    horario_id: data.horario_id || '',
+                    horario_trayecto: data.horario_trayecto || '',
+                    parada_id: data.parada_id || '',
+                    pasajero_id: data.pasajero_id || '',
+                    solicitud_date: data.solicitud_date || '',
+                    solicitud_status: data.solicitud_status || '',
+                    viaje_id: data.viaje_id || '',
+                    solicitud_activa_con: data.solicitud_activa_con || '',
+                    solicitud_activa_pas: data.solicitud_activa_pas || '',
+                };
+            });
+            // Regresar únicamente el primer elemento encontrado
+            res.json(solicitudData.find(solicitud => true));
         } else {
-            res.status(404).json({ error: 'La solicitud no existe' });
+            res.status(404).json({error: 'No se encontraron solicitudes para el horario'});
         }
     } catch (error) {
-        console.error('Error al obtener solicitud desde Firestore:', error);
-        res.status(500).json({ error: 'Error al obtener solicitud desde Firestore' });
+        console.error('Error al obtener documentos desde Firestore:', error);
+        res.status(500).json({error: 'Error al obtener documentos desde Firestore'});
     }
 });
+
 
 // Ruta para registrar una solicitud
 solicitudRouter.post('/registrarsolicitud', async (req, res) => {
@@ -89,12 +92,12 @@ solicitudRouter.post('/registrarsolicitud', async (req, res) => {
         // Agrega un viaje a la coleccion "viaje"
         const viajesCollection = collection(db, 'solicitud');
         const docRef = await addDoc(viajesCollection, nuevoViaje);
-console.log("Enviadaa")
-        res.json({ message: 'Solicitud agregado correctamente', userId: docRef.id});
+        console.log("Enviadaa")
+        res.json({message: 'Solicitud agregado correctamente', userId: docRef.id});
         //res.json({ message: 'Usuario agregado correctamente', userId: docRef.id });
     } catch (error) {
         console.error('Error al agregar solicitud a Firestore:', error);
-        res.status(500).json({ success: false, message: 'Error al agregar solicitud a Firestore' });
+        res.status(500).json({success: false, message: 'Error al agregar solicitud a Firestore'});
     }
 });
 
@@ -113,28 +116,28 @@ solicitudRouter.get('/obtenersolicitudesconductor/:id', async (req, res) => {
             const solicitudData = solicitudSnapshot.docs.map(doc => {
                 const data = doc.data();
                 return {
-                    solicitud_id:     doc.id, // Agregar el Id
+                    solicitud_id: doc.id, // Agregar el Id
                     conductor_id: data.conductor_id || '',
                     horario_id: data.horario_id || '',
                     horario_trayecto: data.horario_trayecto || '',
                     parada_id: data.parada_id || '',
-                    pasajero_id:data.pasajero_id || '',
-                    solicitud_date:data.solicitud_date || '',
-                    solicitud_status:data.solicitud_status || '',
-                    viaje_id:data.viaje_id || '',
-                    solicitud_activa_con:data.solicitud_activa_con || '',
-                    solicitud_activa_pas:data.solicitud_activa_pas || '',
+                    pasajero_id: data.pasajero_id || '',
+                    solicitud_date: data.solicitud_date || '',
+                    solicitud_status: data.solicitud_status || '',
+                    viaje_id: data.viaje_id || '',
+                    solicitud_activa_con: data.solicitud_activa_con || '',
+                    solicitud_activa_pas: data.solicitud_activa_pas || '',
                 };
             });
 
             // Send the array of JSON objects as a response
             res.json(solicitudData);
         } else {
-            res.status(404).json({ error: 'No se encontraron solicitudes para el conductor' });
+            res.status(404).json({error: 'No se encontraron solicitudes para el conductor'});
         }
     } catch (error) {
         console.error('Error al obtener documentos desde Firestore:', error);
-        res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+        res.status(500).json({error: 'Error al obtener documentos desde Firestore'});
     }
 });
 
@@ -148,16 +151,16 @@ solicitudRouter.put('/modificarstatussolicitud/:id/:status', async (req, res) =>
 
         if (paradaDoc.exists()) {
             // Modificar solo el campo status de la parada
-            await updateDoc(paradaRef, { solicitud_status: nuevoStatus });
+            await updateDoc(paradaRef, {solicitud_status: nuevoStatus});
             console.log("Solicitud en status ")
-            res.json({ message: 'Estado de la solicitud modificado correctamente' });
+            res.json({message: 'Estado de la solicitud modificado correctamente'});
         } else {
             console.log("Solicitud en no modif ")
-            res.status(404).json({ error: 'La parada no existe' });
+            res.status(404).json({error: 'La parada no existe'});
         }
     } catch (error) {
         console.error('Error al modificar el estado de la solicitud en Firestore:', error);
-        res.status(500).json({ error: 'Error al modificar el estado de la parada en Firestore' });
+        res.status(500).json({error: 'Error al modificar el estado de la parada en Firestore'});
     }
 });
 
@@ -171,7 +174,7 @@ solicitudRouter.get('/solicitudesbyviaje/:id/:status', async (req, res) => {
     try {
         const viajesRef = collection(db, 'solicitud');
         const viajesQuery = query(viajesRef,
-            where('viaje_id', '==', viajeId),  where('solicitud_status', '==', status)
+            where('viaje_id', '==', viajeId), where('solicitud_status', '==', status)
         );
         const viajesSnapshot = await getDocs(viajesQuery);
 
@@ -181,32 +184,30 @@ solicitudRouter.get('/solicitudesbyviaje/:id/:status', async (req, res) => {
             const viajesData = viajesSnapshot.docs.map(doc => {
                 const data = doc.data();
                 return {
-                    solicitud_id:     doc.id, // Agregar el Id
+                    solicitud_id: doc.id, // Agregar el Id
                     conductor_id: data.conductor_id || '',
                     horario_id: data.horario_id || '',
                     horario_trayecto: data.horario_trayecto || '',
                     parada_id: data.parada_id || '',
-                    pasajero_id:data.pasajero_id || '',
-                    solicitud_date:data.solicitud_date || '',
-                    solicitud_status:data.solicitud_status || '',
-                    viaje_id:data.viaje_id || '',
-                    solicitud_activa_con:data.solicitud_activa_con || '',
-                    solicitud_activa_pas:data.solicitud_activa_pas || '',
+                    pasajero_id: data.pasajero_id || '',
+                    solicitud_date: data.solicitud_date || '',
+                    solicitud_status: data.solicitud_status || '',
+                    viaje_id: data.viaje_id || '',
+                    solicitud_activa_con: data.solicitud_activa_con || '',
+                    solicitud_activa_pas: data.solicitud_activa_pas || '',
 
                 };
             });
-console.log("solicitudes!! ")
+            console.log("solicitudes!! ")
             res.json(viajesData);
         } else {
-            res.status(404).json({ error: 'No se encontraron solicitudes para el viaje' });
+            res.status(404).json({error: 'No se encontraron solicitudes para el viaje'});
         }
     } catch (error) {
         console.error('Error al obtener documentos desde Firestore:', error);
-        res.status(500).json({ error: 'Error al obtener documentos desde Firestore' });
+        res.status(500).json({error: 'Error al obtener documentos desde Firestore'});
     }
 });
-
-
 
 
 module.exports = solicitudRouter;
