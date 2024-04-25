@@ -48,6 +48,7 @@ horarioRouter.get('/itinerarioviajespasajero/:id', async (req, res) => {
                     horario_trayecto:data.horario_trayecto || '',
                     horario_solicitud:data.horario_solicitud || '',
                     horario_status: data.horario_status || '',
+                    horario_iniciado: data.horario_iniciado || ''
 
                 };
             });
@@ -84,7 +85,8 @@ horarioRouter.get('/obtenerhorario/:id', async (req, res) => {
                 horario_origen: horarioData.horario_origen || '',
                 usu_id: horarioData.usu_id || '',
                 horario_solicitud: horarioData.horario_solicitud || '',
-                horario_status: horarioData.horario_status || ''
+                horario_status: horarioData.horario_status || '',
+                horario_iniciado: horarioData.horario_iniciado || ''
 
             });
             console.log("finalemente")
@@ -121,6 +123,7 @@ horarioRouter.get('/busquedaviajes/:id', async (req, res) => {
                 horario_origen: horarioData.horario_origen || '',
                 usu_id: horarioData.usu_id || '',
                 horario_solicitud:  horarioData.horario_solicitud || '',
+                horario_iniciado: horarioData.horario_iniciado || ''
             };
             console.log(DatosHorario)
             try {
@@ -158,6 +161,7 @@ horarioRouter.get('/busquedaviajes/:id', async (req, res) => {
                             viaje_paradas: data.viaje_paradas || '',
                             viaje_iniciado: data.viaje_iniciado || '',
                             usu_id: data.usu_id || '',
+
 
                         };
                     });

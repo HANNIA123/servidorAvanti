@@ -42,7 +42,7 @@ viajeRouter.get('/obtenerviaje/:id', async (req, res) => {
 
             // Enviar datos como respuesta en formato JSON
             res.json({
-                viaje_id: viajeData.viaje_id || '',
+                viaje_id: doc.id, // Agregar el I
                 usu_id: viajeData.usu_id || '',
                 viaje_destino: viajeData.viaje_destino || '',
                 viaje_origen: viajeData.viaje_origen || '',
@@ -56,8 +56,7 @@ viajeRouter.get('/obtenerviaje/:id', async (req, res) => {
                 viaje_iniciado: viajeData.viaje_iniciado || '',
                 viaje_num_pasajeros: viajeData.viaje_num_pasajeros || '',
                 viaje_num_pasajeros_con: viajeData.viaje_num_pasajeros_con || '',
-                viaje_tarifa: viajeData.viaje_tarifa || ''
-
+                viaje_tarifa: viajeData.viaje_tarifa || '',
 
 
 

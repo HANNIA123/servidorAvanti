@@ -40,6 +40,7 @@ notificacionRouter.post('/registrarnotificacion', async (req, res) => {
         const docRef = await addDoc(imprevistoCollection, notificacion);
 
         res.json({ message: 'Notificacion agregada correctamente', userId: docRef.id});
+        console.log("regustardo ")
 
     } catch (error) {
         console.error('Error al agregar el notificacion a Firestore:', error);

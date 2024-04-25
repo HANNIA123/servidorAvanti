@@ -21,7 +21,7 @@ solicitudRouter.get('/obtenersolicitud/:id', async (req, res) => {
 
             // Enviar datos como respuesta en formato JSON
             res.json({
-
+                solicitud_id: doc.id, // Agregar el Id
                 conductor_id: solicitudData.conductor_id || '',
                 horario_id: solicitudData.horario_id || '',
                 horario_trayecto: solicitudData.horario_trayecto || '',
@@ -32,7 +32,7 @@ solicitudRouter.get('/obtenersolicitud/:id', async (req, res) => {
                 viaje_id: solicitudData.viaje_id || '',
                 solicitud_activa_con: solicitudData.solicitud_activa_con || '',
                 solicitud_activa_pas: solicitudData.solicitud_activa_pas || '',
-
+                solicitud_viaje_iniciado: solicitudData.solicitud_viaje_iniciado || ''
 
             });
         } else {
@@ -70,6 +70,7 @@ solicitudRouter.get('/obtenersolicitudhorario/:id', async (req, res) => {
                     viaje_id: data.viaje_id || '',
                     solicitud_activa_con: data.solicitud_activa_con || '',
                     solicitud_activa_pas: data.solicitud_activa_pas || '',
+                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || ''
                 };
             });
             // Regresar únicamente el primer elemento encontrado
@@ -127,6 +128,7 @@ solicitudRouter.get('/obtenersolicitudesconductor/:id', async (req, res) => {
                     viaje_id: data.viaje_id || '',
                     solicitud_activa_con: data.solicitud_activa_con || '',
                     solicitud_activa_pas: data.solicitud_activa_pas || '',
+                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || ''
                 };
             });
 
@@ -195,6 +197,7 @@ solicitudRouter.get('/solicitudesbyviaje/:id/:status', async (req, res) => {
                     viaje_id: data.viaje_id || '',
                     solicitud_activa_con: data.solicitud_activa_con || '',
                     solicitud_activa_pas: data.solicitud_activa_pas || '',
+                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || ''
 
                 };
             });
@@ -209,5 +212,48 @@ solicitudRouter.get('/solicitudesbyviaje/:id/:status', async (req, res) => {
     }
 });
 
+
+solicitudRouter.get('/solicitudesbyhorario/:id/:status', async (req, res) => {
+    const solicitudId = req.params.id;
+    const status = req.params.status;
+
+    try {
+        const SolicitudRef = collection(db, 'solicitud');
+        const SolicitudQuery = query(SolicitudRef,
+            where('horario_id', '==', solicitudId), where('solicitud_status', '==', status)
+        );
+        const SolicitudesSnapshot = await getDocs(SolicitudQuery);
+
+
+        if (SolicitudesSnapshot.docs.length > 0) {
+            // Map the documents to an array of JSON objects
+            const solicitudData = SolicitudesSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    solicitud_id: doc.id, // Agregar el Id
+                    conductor_id: data.conductor_id || '',
+                    horario_id: data.horario_id || '',
+                    horario_trayecto: data.horario_trayecto || '',
+                    parada_id: data.parada_id || '',
+                    pasajero_id: data.pasajero_id || '',
+                    solicitud_date: data.solicitud_date || '',
+                    solicitud_status: data.solicitud_status || '',
+                    viaje_id: data.viaje_id || '',
+                    solicitud_activa_con: data.solicitud_activa_con || '',
+                    solicitud_activa_pas: data.solicitud_activa_pas || '',
+                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || ''
+
+                };
+            });
+
+            res.json(solicitudData);
+        } else {
+            res.status(404).json({error: 'No se encontraron solicitudes para el viaje'});
+        }
+    } catch (error) {
+        console.error('Error al obtener documentos desde Firestore:', error);
+        res.status(500).json({error: 'Error al obtener documentos desde Firestore'});
+    }
+});
 
 module.exports = solicitudRouter;

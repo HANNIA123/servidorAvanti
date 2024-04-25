@@ -47,7 +47,8 @@ paradaRouter.get('/obtenerlistaparadas/:id', async (req, res) => {
                     par_hora: data.par_hora || '',
                     par_nombre: data.par_nombre || '',
                     par_ubicacion: data.par_ubicacion || '',
-                    user_id: data.user_id || ''
+                    user_id: data.user_id || '',
+                    par_recorrido: data.par_recorrido || ''
 
                 };
             });
@@ -82,6 +83,7 @@ paradaRouter.get('/obtenerparada/:id', async (req, res) => {
                 par_nombre: data.par_nombre || '',
                 par_ubicacion: data.par_ubicacion || '',
                 user_id: data.user_id || '',
+                par_recorrido: data.par_recorrido || ''
 
             });
         } else {
@@ -132,6 +134,7 @@ paradaRouter.get('/busquedaparadas/:id', async (req, res) => {
                     par_nombre: data.par_nombre || '',
                     par_ubicacion: data.par_ubicacion || '',
                     user_id: data.user_id || '',
+                    par_recorrido: data.par_recorrido || ''
                 };
             });
 
