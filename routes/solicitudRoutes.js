@@ -32,7 +32,9 @@ solicitudRouter.get('/obtenersolicitud/:id', async (req, res) => {
                 viaje_id: solicitudData.viaje_id || '',
                 solicitud_activa_con: solicitudData.solicitud_activa_con || '',
                 solicitud_activa_pas: solicitudData.solicitud_activa_pas || '',
-                solicitud_viaje_iniciado: solicitudData.solicitud_viaje_iniciado || ''
+                solicitud_viaje_iniciado: solicitudData.solicitud_viaje_iniciado || '',
+                solicitud_validacion_pasajero: solicitudData.solicitud_validacion_pasajero || '',
+                solicitud_validacion_conductor: solicitudData.solicitud_validacion_conductor || '',
 
             });
         } else {
@@ -70,7 +72,9 @@ solicitudRouter.get('/obtenersolicitudhorario/:id', async (req, res) => {
                     viaje_id: data.viaje_id || '',
                     solicitud_activa_con: data.solicitud_activa_con || '',
                     solicitud_activa_pas: data.solicitud_activa_pas || '',
-                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || ''
+                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || '',
+                    solicitud_validacion_pasajero: data.solicitud_validacion_pasajero || '',
+                    solicitud_validacion_conductor: data.solicitud_validacion_conductor || '',
                 };
             });
             // Regresar únicamente el primer elemento encontrado
@@ -128,7 +132,9 @@ solicitudRouter.get('/obtenersolicitudesconductor/:id', async (req, res) => {
                     viaje_id: data.viaje_id || '',
                     solicitud_activa_con: data.solicitud_activa_con || '',
                     solicitud_activa_pas: data.solicitud_activa_pas || '',
-                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || ''
+                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || '',
+                    solicitud_validacion_pasajero: data.solicitud_validacion_pasajero || '',
+                    solicitud_validacion_conductor: data.solicitud_validacion_conductor || '',
                 };
             });
 
@@ -197,7 +203,10 @@ solicitudRouter.get('/solicitudesbyviaje/:id/:status', async (req, res) => {
                     viaje_id: data.viaje_id || '',
                     solicitud_activa_con: data.solicitud_activa_con || '',
                     solicitud_activa_pas: data.solicitud_activa_pas || '',
-                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || ''
+                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || '',
+
+                    solicitud_validacion_pasajero: data.solicitud_validacion_pasajero || '',
+                    solicitud_validacion_conductor: data.solicitud_validacion_conductor || '',
 
                 };
             });
@@ -241,7 +250,10 @@ solicitudRouter.get('/solicitudesbyhorario/:id/:status', async (req, res) => {
                     viaje_id: data.viaje_id || '',
                     solicitud_activa_con: data.solicitud_activa_con || '',
                     solicitud_activa_pas: data.solicitud_activa_pas || '',
-                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || ''
+                    solicitud_viaje_iniciado: data.solicitud_viaje_iniciado || '',
+
+                    solicitud_validacion_pasajero: data.solicitud_validacion_pasajero || '',
+                    solicitud_validacion_conductor: data.solicitud_validacion_conductor || '',
 
                 };
             });
