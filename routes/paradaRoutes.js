@@ -48,7 +48,8 @@ paradaRouter.get('/obtenerlistaparadas/:id', async (req, res) => {
                     par_nombre: data.par_nombre || '',
                     par_ubicacion: data.par_ubicacion || '',
                     user_id: data.user_id || '',
-                    par_recorrido: data.par_recorrido || ''
+                    par_recorrido: data.par_recorrido || '',
+                    par_llegada_pas:data.par_llegada_pas || ''
 
                 };
             });
@@ -83,7 +84,8 @@ paradaRouter.get('/obtenerparada/:id', async (req, res) => {
                 par_nombre: data.par_nombre || '',
                 par_ubicacion: data.par_ubicacion || '',
                 user_id: data.user_id || '',
-                par_recorrido: data.par_recorrido || ''
+                par_recorrido: data.par_recorrido || '',
+                par_llegada_pas:data.par_llegada_pas || ''
 
             });
         } else {
@@ -134,7 +136,8 @@ paradaRouter.get('/busquedaparadas/:id', async (req, res) => {
                     par_nombre: data.par_nombre || '',
                     par_ubicacion: data.par_ubicacion || '',
                     user_id: data.user_id || '',
-                    par_recorrido: data.par_recorrido || ''
+                    par_recorrido: data.par_recorrido || '',
+                    par_llegada_pas:data.par_llegada_pas || ''
                 };
             });
 
