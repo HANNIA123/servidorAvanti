@@ -33,7 +33,7 @@ notificacionRouter.use(express.json());
 //Ya implementado, no borrar
 notificacionRouter.post('/registrarnotificacion', async (req, res) => {
     try {
-        const notificacion = req.body; // Asumiendo que la solicitud POST contiene los datos del nuevo usuario
+        const notificacion = req.body;
 
 
         const imprevistoCollection = collection(db, 'notificacion');
