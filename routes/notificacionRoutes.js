@@ -88,12 +88,13 @@ notificacionRouter.get('/obtenernotificaciones/:id', async (req, res) => {
 
 
 //Token
-//ENVIAR TOKEN
-notificacionRouter.post('/enviarnotificacionserver/:token/:titulo/:cuerpo', async (req, res) => {
+notificacionRouter.post('/enviarnotificacionserver/:token/:titulo/:cuerpo/:userId', async (req, res) => {
     const token = req.params.token;
     const titulo = req.params.titulo;
     const cuerpo = req.params.cuerpo;
+    const userId = req.params.userId;
     console.log('RECIBE TOKEN', token)
+    console.log('USERID', userId)
 
     // Ejemplo de enviar notificación a un dispositivo específico
     try {
@@ -101,6 +102,9 @@ notificacionRouter.post('/enviarnotificacionserver/:token/:titulo/:cuerpo', asyn
             notification: {
                 title: titulo,
                 body: cuerpo
+            },
+            data: {
+                userId: userId
             },
             token: token,
         };
@@ -115,7 +119,6 @@ notificacionRouter.post('/enviarnotificacionserver/:token/:titulo/:cuerpo', asyn
 
     //res.sendStatus(200); // Responder con un código 200 OK
 });
-
 
 
 module.exports = notificacionRouter;
